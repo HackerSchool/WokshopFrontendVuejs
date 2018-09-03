@@ -19,7 +19,7 @@
 <script>
 import download from '../api/torrents'
 
-//'magnet:?xt=urn:btih:476fb80ed698a98daef486ce0d949627622c7dce'
+//magnet:?xt=urn:btih:476fb80ed698a98daef486ce0d949627622c7dce
 
 export default {
   name: 'Home',
@@ -31,7 +31,9 @@ export default {
   },
   methods: {
     async DownloadTorrent() {
-      this.response = await download(this.torrent);
+      var result = await download(this.torrent);
+
+      this.response = result.response
     }
   }
 }
