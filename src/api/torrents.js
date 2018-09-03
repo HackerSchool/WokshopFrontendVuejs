@@ -10,4 +10,13 @@ async function download(infoHash) {
 
 }
 
+async function getList() {
+  const response = await client.get('/list')
+  console.log(response.data)
+  return {
+    response: response.data
+  }
+}
+
+
 export default download

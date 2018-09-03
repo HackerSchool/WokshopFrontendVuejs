@@ -2,7 +2,7 @@
   <div class="dashboard">
     <h1>Your torrents' state:</h1>
 
-    <table  style="width:100%">
+    <table v-if="torrents.length != 0" style="width:100%">
       <tr>
         <th>Name</th>
         <th>Downloaded</th>
@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import download from '../api/torrents'
-//v-if="torrents.length != 0"
+import getList from '../api/torrents'
+
 export default {
   name: 'Home',
   data () {
@@ -46,8 +46,10 @@ export default {
     }
   },
   methods: {
-    async getList() {
-      
+    async listOfTorrents() {
+      var result = await getList(this.torrent);
+
+      this.torrents = result.response
     }
   }
 }
