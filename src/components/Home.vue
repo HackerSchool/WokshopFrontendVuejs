@@ -11,15 +11,16 @@
     <!-- To showcase the v-ifs -->
     <!-- <p v-if="torrent">By clicking submit you are...... doing nothing wrong!</p> -->
 
-    <p v-if="response">{{response}}</p>
+    <p v-if="response != null">{{response}}</p>
+    <button @click="redirect">Torrents</button>
+
 
   </div>
 </template>
 
 <script>
-import download from '../api/torrents'
-
-//magnet:?xt=urn:btih:476fb80ed698a98daef486ce0d949627622c7dce
+import api from '../api/torrents'
+// import axios from 'axios'
 
 export default {
   name: 'Home',
@@ -30,10 +31,26 @@ export default {
     }
   },
   methods: {
+    // exp: magnet:?xt=urn:btih:476fb80ed698a98daef486ce0d949627622c7dce
     async DownloadTorrent() {
-      var result = await download(this.torrent);
+      api.download(this.torrent).then( (response) => {
+        this.response = JSON.stringify(response)
+      })
 
-      this.response = result.response
+      /* const result = axios.post('http://localhost:3000/add', {infoHash: this.torrent})
+        .then((response) => {
+          this.response = JSON.stringify(response.data)
+        }).catch( (err) => {
+      }) */
+    },
+    redirect() {
+      this.$router.push("torrents")
+    }
+  },
+  mounted() {
+    if(this.$route.query.torrent) {
+      this.torrent = this.$route.query.torrent
+      this.DownloadTorrent()
     }
   }
 }

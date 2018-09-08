@@ -1,27 +1,31 @@
 <template>
   <div class="dashboard">
     <h1>Your torrents' state:</h1>
-
-    <table v-if="torrents.length != 0" style="width:100%">
-      <tr>
-        <th>Name</th>
-        <th>Downloaded</th>
-        <th>Time Remaining</th>
-        <th>State</th>
-      </tr>
-      <tr v-for="torrent in torrents" :key="torrent.hash">
-        <td>{{torrent.name}}</td>
-        <td>{{torrent.downloaded}}</td>
-        <td>{{torrent.timeRemaining}}</td>
-        <td>{{torrent.state}}</td>
-      </tr>
-    </table>
-
+    <div v-if="torrents.length != 0">
+      <table style="width:100%">
+        <tr>
+          <th>Name</th>
+          <th>Downloaded</th>
+          <th>Time Remaining</th>
+          <th>State</th>
+        </tr>
+        <tr v-for="torrent in torrents" :key="torrent.hash">
+          <td>{{torrent.name}}</td>
+          <td>{{torrent.downloaded}}</td>
+          <td>{{torrent.timeRemaining}}</td>
+          <td>{{torrent.state}}</td>
+        </tr>
+      </table>
+    </div>
+    <div v-else>
+      No torrents currently
+    </div>
+    <button @click="redirect">Home</button>
   </div>
 </template>
 
 <script>
-import getList from '../api/torrents'
+import api from '../api/torrents'
 
 export default {
   name: 'Home',
@@ -46,11 +50,14 @@ export default {
     }
   },
   methods: {
-    async listOfTorrents() {
-      var result = await getList(this.torrent);
-
-      this.torrents = result.response
+    redirect() {
+      this.$router.push("/")
     }
+  },
+  async mounted () {
+    api.getList().then( (response) => {
+      this.torrents = response
+    } )
   }
 }
 </script>
