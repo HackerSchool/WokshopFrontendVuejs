@@ -11,8 +11,14 @@ async function getList() {
   return response.data
 }
 
+async function stream() {
+  const response = await axios.get(baseUrl + '/stream')
+  return response.data
+}
+
 
 export default {
   download,
-  getList
+  getList,
+  stream
 }

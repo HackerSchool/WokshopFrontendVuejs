@@ -1,18 +1,19 @@
 <template>
   <div class="add">
-    <form>
+    <form @submit.prevent>
       <p>Insert the infoHash of the torrent you want to download:</p>
       <input type="text" v-model="torrent" name="torrent" placeholder="Insert infoHash">
       <button @click="DownloadTorrent">Submit</button>
     </form>
 
-    <!-- <p v-if="response != null">{{response}}</p> -->
+    <!--<stream v-if="response != null"/>-->
 
   </div>
 </template>
 
 <script>
 import api from '../api/torrents'
+import stream from '@/components/Stream'
 
 export default {
   name: 'Home',
@@ -22,12 +23,16 @@ export default {
       response: null
     }
   },
+  components: {
+    stream
+  },
   methods: {
-    DownloadTorrent() {
-      api.download(this.torrent)
-      this.$router.push({
-        'name': 'Stream',
-        params: {infoHash: this.torrent }
+    async DownloadTorrent() {
+      api.download(this.torrent).then((resp) => {
+        //this.response = resp
+        this.$router.push({
+          'name': 'Dashboard'
+        })
       })
     }
   }

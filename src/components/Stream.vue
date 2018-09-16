@@ -1,16 +1,43 @@
 <template>
+  <video-player  class="video-player-box"
+                 ref="videoPlayer"
+                 :options="playerOptions"
+                 :playsinline="true"
+                 customEventName="customstatechangedeventname"
 
-  <div id="player">
-    <video id="video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload width="640" height="360"></video>
-  </div>
+                 @play="onPlayerPlay($event)"
+                 @pause="onPlayerPause($event)"
+                 @ended="onPlayerEnded($event)"
+                 @waiting="onPlayerWaiting($event)"
+                 @playing="onPlayerPlaying($event)"
+                 @loadeddata="onPlayerLoadeddata($event)"
+                 @timeupdate="onPlayerTimeupdate($event)"
+                 @canplay="onPlayerCanplay($event)"
+                 @canplaythrough="onPlayerCanplaythrough($event)"
+
+                 @statechanged="playerStateChanged($event)"
+                 @ready="playerReadied">
+  </video-player>
 </template>
-<script src="http://vjs.zencdn.net/4.5/video.js"></script>
-<script>
-export default {
-  name: 'Stream',
-  data() {
-      return {
 
+<script>
+  // Similarly, you can also introduce the plugin resource pack you want to use within the component
+  // import 'some-videojs-plugin'
+  export default {
+    name: 'Stream',
+    data() {
+      return {
+        playerOptions: {
+          // videojs options
+          muted: true,
+          language: 'en',
+          playbackRates: [0.7, 1.0, 1.5, 2.0],
+          sources: [{
+            type: "video/mp4",
+            src: "http://localhost:3000/stream/video/476fb80ed698a98daef486ce0d949627622c7dce/1"
+          }],
+          //poster: "/static/images/author.jpg",
+        }
       }
     },
     props: {
@@ -20,12 +47,34 @@ export default {
       }
     },
     mounted() {
+      console.log('this is current player instance object', this.player)
     },
     computed: {
-
+      player() {
+        return this.$refs.videoPlayer.player
+      }
     },
     methods: {
+      // listen event
+      onPlayerPlay(player) {
+        // console.log('player play!', player)
+      },
+      onPlayerPause(player) {
+        // console.log('player pause!', player)
+      },
+      // ...player event
 
+      // or listen state event
+      playerStateChanged(playerCurrentState) {
+        // console.log('player current update state', playerCurrentState)
+      },
+
+      // player is ready
+      playerReadied(player) {
+        console.log('the player is readied', player)
+        // you can use it to do something...
+        // player.[methods]
+      }
     }
   }
 </script>
