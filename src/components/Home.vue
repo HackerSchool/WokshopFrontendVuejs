@@ -5,31 +5,22 @@
       <input type="text" v-model="torrent" name="torrent" placeholder="Insert infoHash">
       <button @click="DownloadTorrent">Submit</button>
     </form>
-
-    <!--<stream v-if="response != null"/>-->
-
   </div>
 </template>
 
 <script>
 import api from '../api/torrents'
-import stream from '@/components/Stream'
 
 export default {
   name: 'Home',
   data () {
     return {
-      torrent: null,
-      response: null
+      torrent: null
     }
-  },
-  components: {
-    stream
   },
   methods: {
     async DownloadTorrent() {
-      api.download(this.torrent).then((resp) => {
-        //this.response = resp
+      api.download(this.torrent).then((resp) => {   // fixme, avaliar resposta?
         this.$router.push({
           'name': 'Dashboard'
         })

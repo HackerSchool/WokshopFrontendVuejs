@@ -1,5 +1,16 @@
 <template>
   <div class="dashboard">
+    <br>
+    <div v-if="selectedTorrentInfoHash != null">
+      Select the file you wish to strem in <b>{{selectedTorrentName}}</b>:
+      <form @submit.prevent>
+        <div v-for="file in files" :key="file.index">
+          <input type="radio" v-model="selectedFile" :value="file.index"/>{{file.name}}<br>
+        </div>
+        <input @click="redirect()" type="submit" value="Stream">
+      </form>
+      <br><br>
+    </div>
     <center>
       <div v-if="torrents.length != 0">
         <table style="width:100%">
@@ -10,7 +21,7 @@
             <th>State</th>
           </tr>
           <tr v-for="torrent in torrents" :key="torrent.hash">
-            <td @click="redirect(torrent.hash)">{{torrent.name}}</td>
+            <td @click="selectTorrent(torrent.hash)">{{torrent.name}}</td>
             <td>{{torrent.downloaded}}</td>
             <td>{{torrent.timeRemaining}}</td>
             <td>{{torrent.state}}</td>
@@ -29,40 +40,66 @@ import api from '../api/torrents'
 
 export default {
   name: 'Dashboard',
-  data () {
-    return {
-      torrents: []
+  props: {
+    infoHash: {
+      required: false,
+      type: String
     }
   },
-  methods: {
-    //fixme - convert time and size to decent formats
-    //fixme - delete button
-    redirect(infoHash){
-      //fixme
-      this.$router.push({
+  data () {
+    return {
+      torrents: [],
+      selectedTorrentInfoHash: String,
+      files: [],
+      selectedFile: String
+    }
+  },
+  computed: {
+    selectedTorrentName() {
+      const torrent = this.torrents.filter( (t) => {
+        if(t.hash == this.selectedTorrentInfoHash){
+          return t
+        }
+      })
+      return torrent[0].name
+    }
+  },
+  methods: {    //fixme - convert time and size to decent formats, delete button
+    redirect() {
+      //fixme verify if file extension is a movie one
+      this.$router.push({   //fixme Podemos pôr isto implicito no botão em vez de numa função ?
         'name': 'Stream',
-        params: {infoHash}
+        params: {
+          infoHash: this.selectedTorrentInfoHash,
+          fileIndex: this.selectedFile
+        }
+      })
+    },
+    async selectTorrent(infoHash) {
+      api.getFiles(infoHash).then((files) => {
+        this.selectedTorrentInfoHash = infoHash
+        this.files = files
       })
     }
   },
-  async mounted () {
-    api.getList().then( (response) => {
-      this.torrents = response
-    } )
-  }
+  async beforeMount () {
+    // Make periodic calls to the api
+    setInterval(function () {
+      api.getList().then( (response) => {
+        this.torrents = response
+      } )
+    }.bind(this), 1000)
+    this.selectedTorrentInfoHash = this.infoHash
+  },
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 .dashboard {
   text-align: left;
 }
-
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
 }
-
 </style>
