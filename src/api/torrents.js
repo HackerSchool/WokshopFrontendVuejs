@@ -1,22 +1,30 @@
-import client from './client'
+import axios from 'axios'
+const baseUrl = 'http://localhost:3000'
 
 async function download(infoHash) {
-  console.log(infoHash)
-  const response = await client.post('/add', { params: { infoHash } })
-  console.log(response.data)
-  return {
-    response: response.data
-  }
-
+  const response = await axios.post(baseUrl + '/add',  { infoHash } )
+  return response.data
 }
 
 async function getList() {
-  const response = await client.get('/list')
-  console.log(response.data)
-  return {
-    response: response.data
-  }
+  const response = await axios.get(baseUrl + '/list')
+  return response.data
+}
+
+async function getFiles(infoHash) {
+  const response = await axios.get(baseUrl + '/stream/list/' + infoHash)
+  return response.data
+}
+
+async function stream() {
+  const response = await axios.get(baseUrl + '/stream')
+  return response.data
 }
 
 
-export default download
+export default {
+  download,
+  getList,
+  getFiles,
+  stream
+}
