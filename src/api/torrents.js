@@ -12,6 +12,7 @@ async function getList() {
 }
 
 async function getFiles(infoHash) {
+  console.log(infoHash)
   const response = await axios.get(baseUrl + '/stream/list/' + infoHash)
   return response.data
 }
@@ -20,7 +21,6 @@ async function stream() {
   const response = await axios.get(baseUrl + '/stream')
   return response.data
 }
-
 
 export default {
   download,

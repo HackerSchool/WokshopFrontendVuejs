@@ -2,7 +2,7 @@
   <div class="dashboard">
     <br>
     <div v-if="selectedTorrentInfoHash != null">
-      Select the file you wish to strem in <b>{{selectedTorrentName}}</b>:
+      Select the file you wish to stream in <b>{{selectedTorrentName}}</b>:
       <form @submit.prevent>
         <div v-for="file in files" :key="file.index">
           <input type="radio" v-model="selectedFile" :value="file.index"/>{{file.name}}<br>
