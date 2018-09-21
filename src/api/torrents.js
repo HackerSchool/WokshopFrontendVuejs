@@ -16,8 +16,8 @@ async function getFiles(infoHash) {
   return response.data
 }
 
-async function stream() {
-  const response = await axios.get(baseUrl + '/stream')
+async function remove(infoHash) {
+  const response = await axios.get(baseUrl + '/delete', {infoHash})
   return response.data
 }
 
@@ -26,5 +26,5 @@ export default {
   download,
   getList,
   getFiles,
-  stream
+  remove
 }
