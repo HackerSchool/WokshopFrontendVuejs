@@ -7,7 +7,7 @@
         <div v-for="file in files" :key="file.index">
           <input type="radio" v-model="selectedFile" :value="file.index"/>{{file.name}}<br>
         </div>
-        <input @click="redirect()" type="submit" value="Stream">
+        <input @click="redirectToStream()" type="submit" value="Stream">
       </form>
       <br><br>
     </div>
@@ -25,6 +25,7 @@
             <td>{{torrent.downloaded}}</td>
             <td>{{torrent.timeRemaining}}</td>
             <td>{{torrent.state}}</td>
+            <td><input @click="deleteTorrent(torrent.hash)" type="button" value="Delete"></td>
           </tr>
         </table>
       </div>
@@ -62,12 +63,21 @@ export default {
         }
       })
       return torrent[0].name
+    },
+    getTime(t){
+      return t  //fixme to h/min
+    },
+    getSize(s){
+      return s  //fixme to GB/MB
+    },
+    getState(s){
+      return (s==0) ? 'Downloading' : 'Downloaded'
     }
   },
-  methods: {    //fixme - convert time and size to decent formats, delete button
-    redirect() {
+  methods: {
+    redirectToStream() {
       //fixme verify if file extension is a movie one
-      this.$router.push({   //fixme Podemos pôr isto implicito no botão em vez de numa função ?
+      this.$router.push({
         'name': 'Stream',
         params: {
           infoHash: this.selectedTorrentInfoHash,
@@ -79,6 +89,13 @@ export default {
       api.getFiles(infoHash).then((files) => {
         this.selectedTorrentInfoHash = infoHash
         this.files = files
+      })
+    },
+    async deleteTorrent(infoHash) {
+      api.remove(infoHash).then((response) => {
+        if(infoHash == this.selectedTorrentInfoHash){
+          this.selectedTorrentInfoHash = ''
+        }
       })
     }
   },
