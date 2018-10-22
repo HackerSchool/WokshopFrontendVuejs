@@ -37,8 +37,11 @@ https://vuejs-tips.github.io/cheatsheet
 ### Bibliotecas de Vue.js importantes
 
 Vuex: https://vuex.vuejs.org/
+
 Vue Router: https://router.vuejs.org/
+
 Vue CLI: https://cli.vuejs.org/guide
+
 Vuetify: https://vuetifyjs.com
 
 ### Tutorial de Vue.js + Node.js da freeCodeCamp
