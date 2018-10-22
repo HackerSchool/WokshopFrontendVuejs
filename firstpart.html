@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My first Vue app</title>
+	<script src="https://unpkg.com/vue"></script>
+</head>
+
+<body>
+	<div id="app">
+		<p v-if="condition">
+			{{message}}
+		</p>
+		<p v-else>
+			{{falsemessage}}
+		</p>
+		<button v-on:click="change">Oi, clica-me</button>
+		<ul v-for="color in colors">
+			<li>{{color.cor}}</li>
+		</ul>
+	</div>
+
+	<script>
+		var vm = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+				falsemessage: 'Bye Vue!',
+				condition: true,
+				colors: [{cor:'red'},{cor:'blue'},{cor:'yellow'}]
+      },
+			beforeCreate: function() {
+					alert("before creation")
+			},
+			methods: {
+				change(){
+					this.condition = !this.condition
+				}
+			}
+    })
+	</script>
+</body>
+
+</html>
